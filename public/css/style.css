@@ -1,0 +1,34 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    background-color: #011f39;
+    color: white;
+}
+
+.header-eni {
+    background-color: white;
+    color: #011f39;
+    margin: 0px;
+    padding: 10px 20px;
+}
+
+.header-eni a {
+    text-decoration: none;
+    color: #95b258;
+}
+
+.login-eni {
+    max-width: 450px;
+    min-height: 500px;
+    margin: auto;
+    padding: 10px 20px;
+}
+
+.login-eni a {
+    color: #95b258;
+}
+
+.login-eni button {
+    background-color: #95b258;
+    border-color: #95b258;
+}
