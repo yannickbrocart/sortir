@@ -6,7 +6,7 @@
     <div class="row pt-3 display-6 justify-content-center">Mon profil</div>
     <div class="row pt-5 user-eni">
         <div class="col-5">
-            //{% if(app.user.urlpicture) %}
+            {% if(app.user.urlpicture) %}
             <img alt="Photo utilisateur" title="Photo utilisateur" src="{{ asset('img/' ~ app.user.urlpicture) }}" width="200"/>
             {% else %}
             <img alt="Photo utilisateur" title="Photo utilisateur" src="{{ asset('img/blank.jpg') }}" width="200"/>
