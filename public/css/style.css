@@ -32,3 +32,19 @@ body {
     background-color: #95b258;
     border-color: #95b258;
 }
+
+.user-eni {
+    max-width: 800px;
+    margin: auto;
+    padding: 10px 20px;
+}
+
+.user-eni button {
+    background-color: #95b258;
+    border-color: #95b258;
+}
+
+img {
+    border-radius: 3%;
+}
+

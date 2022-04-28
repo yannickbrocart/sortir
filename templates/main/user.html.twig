@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}Profil utilisateur{% endblock %}
+
+{% block body %}
+    <div class="row pt-3 display-6 justify-content-center">Mon profil</div>
+    <div class="row pt-5 user-eni">
+        <div class="col-5">
+            //{% if(app.user.urlpicture) %}
+            <img alt="Photo utilisateur" title="Photo utilisateur" src="{{ asset('img/' ~ app.user.urlpicture) }}" width="200"/>
+            {% else %}
+            <img alt="Photo utilisateur" title="Photo utilisateur" src="{{ asset('img/blank.jpg') }}" width="200"/>
+            {% endif %}
+        </div>
+        <div class="col-7">
+            {{ form_start(userForm) }}
+            <div class="row mb-3">
+                <label for="inputName" class="form-label mb-2 px-0">Pseudo : </label>
+                {{ form_widget(userForm.username) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputFistname" class="form-label mb-2 px-0">Nom : </label>
+                {{ form_widget(userForm.firstname) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputLastname" class="form-label mb-2 px-0">Prénom : </label>
+                {{ form_widget(userForm.lastname) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputPhonenumber" class="form-label mb-2 px-0">Téléphone : </label>
+                {{ form_widget(userForm.phonenumber) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputEmail" class="form-label mb-2 px-0">Mail : </label>
+                {{ form_widget(userForm.email) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputPasswordfist" class="form-label mb-2 px-0">Modifier le mot de passe ? </label>
+                {{ form_widget(userForm.plainpassword.first) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputPasswordsecond" class="form-label mb-2 px-0">Confirmation ? </label>
+                {{ form_widget(userForm.plainpassword.second) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputCampus" class="form-label mb-2 px-0">Campus : </label>
+                {{ form_widget(userForm.campus) }}
+            </div>
+            <div class="row mb-4">
+                <label for="inputUrlimage" class="form-label mb-2 px-0">Ma photo : </label>
+                <div class="px-0">{{ form_widget(userForm.urlpicture) }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col form-group p-0">
+                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                    <a href="{{ path('main_home') }}">
+                        <button class="btn btn-primary" type="button">Annuler</button>
+                    </a>
+                </div>
+            </div>
+            {{ form_end(userForm) }}
+        </div>
+    </div>
+{% endblock %}
