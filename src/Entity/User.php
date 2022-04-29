@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -68,6 +70,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $urlpicture;
+
+    #[ORM\OneToMany(mappedBy: 'organizer', targetEntity: Output::class)]
+    private $outputs;
+
+    #[ORM\ManyToMany(targetEntity: Output::class, inversedBy: 'users')]
+    private $registred;
+
+    public function __construct()
+    {
+        $this->outputs = new ArrayCollection();
+        $this->registred = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -219,6 +233,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Output>
+     */
+    public function getOutputs(): Collection
+    {
+        return $this->outputs;
+    }
+
+    public function addOutput(Output $output): self
+    {
+        if (!$this->outputs->contains($output)) {
+            $this->outputs[] = $output;
+            $output->setOrganizer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOutput(Output $output): self
+    {
+        if ($this->outputs->removeElement($output)) {
+            // set the owning side to null (unless already changed)
+            if ($output->getOrganizer() === $this) {
+                $output->setOrganizer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Output>
+     */
+    public function getRegistred(): Collection
+    {
+        return $this->registred;
+    }
+
+    public function addRegistred(Output $registred): self
+    {
+        if (!$this->registred->contains($registred)) {
+            $this->registred[] = $registred;
+        }
+
+        return $this;
+    }
+
+    public function removeRegistred(Output $registred): self
+    {
+        $this->registred->removeElement($registred);
 
         return $this;
     }

@@ -8,8 +8,13 @@ body {
 .header-eni {
     background-color: white;
     color: #011f39;
-    margin: 0px;
+    margin: auto;
     padding: 10px 20px;
+}
+
+.header-eni .content {
+    max-width: 1200px;
+    margin: auto;
 }
 
 .header-eni a {
@@ -48,3 +53,22 @@ img {
     border-radius: 3%;
 }
 
+.main-eni {
+    max-width: 1200px;
+    margin: auto;
+    padding: 10px 20px;
+}
+
+.main-eni a {
+    text-decoration: none;
+    color: #95b258;
+}
+
+.main-eni button {
+    background-color: #95b258;
+    border-color: #95b258;
+}
+
+#organizers a {
+    color: dodgerblue;
+}
