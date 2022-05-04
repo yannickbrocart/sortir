@@ -3,6 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Campus;
+use App\Entity\Filter;
+use App\Entity\Output;
+use App\Form\FilterType;
+use App\Form\OutputType;
 use App\Form\UserType;
 use App\Repository\CampusRepository;
 use App\Repository\OutputRepository;
@@ -22,16 +26,25 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class MainController extends AbstractController
 {
     #[Route('', name: 'home')]
-    public function index(CampusRepository $campusRepository, OutputRepository $outputRepository): Response
+    public function index(Request $request, CampusRepository $campusRepository, OutputRepository $outputRepository): Response
     {
         $campus = $campusRepository->findAll();
-        $output = $outputRepository->findAll();
-
+        $filter = new Filter();
+        $filterForm = $this ->createForm(FilterType::class, $filter);
+        $filterForm->handleRequest($request);
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+/*            $output = $outputRepository->findAll();*/
+/*            var_dump($filter);*/
+            $output = $outputRepository->findByFilter($filter);
+        } else {
+            $output = $outputRepository->findAll();
+        }
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
             'campus' => $campus,
             'outputs' => $output,
-        ]);
+            'filterForm' => $filterForm->createView(),
+            ]);
     }
 
     #[Route('user', name: 'user_edit')]
@@ -60,11 +73,27 @@ class MainController extends AbstractController
             }
             $entityManager->persist($user);
             $entityManager->flush();
-            //$this->addFlash('succes', 'Utilisateur mis à jour !');
             return $this->redirectToRoute('main_home');
         }
         return $this->render('main/user.html.twig', [
             'userForm' => $userForm->createView(),
+        ]);
+    }
+
+    #[Route('output', name: 'create_output')]
+    public function createOutput(Request $request, EntityManagerInterface $entityManager, OutputRepository $outputRepository, OutputType $outputType,
+                                    Security $security): Response
+    {
+        $user=$security->getUser();
+        $outputForm = $this ->createForm(OutputType::class, new Output());
+/*        $outputForm->setOrganizer($user);*/
+        if ($outputForm->isSubmitted() && $outputForm->isValid()) {
+            $entityManager->persist($output);
+            $entityManager->flush();
+            return $this->redirectToRoute('main_home');
+        }
+        return $this->render('main/create_output.html.twig', [
+            'outputForm' => $outputForm->createView(),
         ]);
     }
 }

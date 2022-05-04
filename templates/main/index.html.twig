@@ -15,78 +15,79 @@
         </div>
         <div class="row mb-4">
             <div class="col-5">
+                {{ form_start(filterForm) }}
                 <div class="row mb-3">
-                    <label for="inputCampus" class="col form-label mb-2 px-0">Campus : </label>
-                    <select class="col form-select">
-                        <option selected>Choisissez</option>
-                        {% for camp in campus %}
-                            <option value="{{ camp.id }}"> {{ camp.name }} </option>
-                        {% endfor %}
-                    </select>
+                    <label for="campus" class="col form-label mb-2 px-0">Campus : </label>
+                    {{ form_widget(filterForm.campus) }}
                 </div>
                 <div class="row mb-3">
-                    <label for="inputSearch" class="col form-label mb-2 px-0">Le nom de la sortie contient : </label>
-                    <input class="col form-control" type="text" placeholder="rechercher">
+                    <label for="search" class="col form-label mb-2 px-0">Le nom de la sortie contient : </label>
+                    {{ form_widget(filterForm.search) }}
 
                 </div>
                 <div class="row">
-                    <label for="inputDate1" class="col form-label mb-2 px-0">Entre le </label>
-                    <input class="col form-control" type="date" name="date1">
-                    <label for="inputDate2" class="col form-label mb-2 px-0"> et le </label>
-                    <input class="col form-control" type="date" name="date2">
+                    <div class="col px-0">
+                        <label for="inputDate1" class="form-label mb-2">Entre le </label>
+                    {{ form_widget(filterForm.startdatetime) }}
+                    </div>
+                    <div class="col px-0">
+                        <label for="inputDate2" class="form-label mb-2"> et le </label>
+                    {{ form_widget(filterForm.enddatetime) }}
+                    </div>
                 </div>
             </div>
-            <div class="col-5">
+            <div class="col-4 offset-1">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="organize" id="flexCheckOrganize">
-                    <label class="form-check-label" for="flexCheckOrganize">
+                    {{ form_widget(filterForm.organize) }}
+                    <label class="form-check-label" for="organize">
                         Sorties dont je suis l'organisat.eur.trice</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="registered" id="flexCheckRegistered">
-                    <label class="form-check-label" for="flexCheckRegistered">
+                    {{ form_widget(filterForm.registered) }}
+                    <label class="form-check-label" for="registered">
                         Sorties auxquelles je suis inscrit.e</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="unregistered" id="flexCheckUnregistered">
-                    <label class="form-check-label" for="flexCheckUnregistered">
+                    {{ form_widget(filterForm.unregistered) }}
+                    <label class="form-check-label" for="unregistered">
                         Sorties auxquelles je ne suis pas inscrit.e</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="past" id="flexCheckPast">
-                    <label class="form-check-label" for="flexCheckPast">
+                    {{ form_widget(filterForm.past) }}
+                    <label class="form-check-label" for="past">
                         Sorties passées</label>
                 </div>
             </div>
             <div class="col-2">
                 <button class="btn btn-primary" type="submit">Rechercher</button>
             </div>
+            {{ form_end(filterForm) }}
         </div>
         <div class="row mb-3">
             <table class="table table-sm table-light table-striped caption-top">
                 <caption>Liste des sorties</caption>
                 <thead>
-                    <tr>
-                        <th scope="col">Nom de la sortie</th>
-                        <th scope="col">Date de la sortie</th>
-                        <th scope="col">Clôture</th>
-                        <th scope="col">Places</th>
-                        <th scope="col">Etat</th>
-                        <th scope="col">Inscrit</th>
-                        <th scope="col">Organisateur</th>
-                        <th scope="col">Actions</th>
-                    </tr>
+                <tr>
+                    <th scope="col">Nom de la sortie</th>
+                    <th scope="col">Date de la sortie</th>
+                    <th scope="col">Clôture</th>
+                    <th scope="col">Places</th>
+                    <th scope="col">Etat</th>
+                    <th scope="col">Inscrit</th>
+                    <th scope="col">Organisateur</th>
+                    <th scope="col">Actions</th>
+                </tr>
                 </thead>
                 <tbody>
                 {% for output in outputs %}
                     <tr>
                         <th scope="row">{{ output.name }}</th>
-                        <td>{{ output.startdatetime | date ("d/m/y - h:i a") }}</td>
+                        <td>{{ output.startdatetime | date ("d/m/y - H:i") }}</td>
                         <td>{{ output.registrationdeadline | date ("d/m/y") }}</td>
                         <td>{{ output.users.count }} / {{ output.registrationmaxnumber }}</td>
                         <td>{{ output.state.label }}</td>
                         <td>{% if output.users.get(app.user.id) == app.user.username %} X
-                            {% else %} -----
+                            {% else %}
                             {% endif %}</td>
                         <td id="organizers"><a href=""> {{ output.organizer.username }} </a></td>
                         <td>{% if output.organizer.username == app.user.username %}                                 {# si créateur #}
@@ -104,7 +105,7 @@
                                 {% endif %}
                             {% else %}                                                                              {# si non inscrit ni créateur #}
                                 <a href="">Afficher</a>
-                                {% if output.state.label == "Ouverte" %} | <a href="">S'inscrire</a>                                         {# si inscriptions ouvertes #}
+                                {% if output.state.label == "Ouverte" %} | <a href="">S'inscrire</a>                {# si inscriptions ouvertes #}
                                 {% endif %}
                             {% endif %}</td>
                     </tr>
@@ -114,7 +115,7 @@
         </div>
         <div class="row">
             <div class="col px-0">
-                <button class="btn btn-primary" type="submit">Créer une sortie</button>
+                <a href="{{ path('main_create_output') }}"><button class="btn btn-primary" type="submit">Créer une sortie</button></a>
             </div>
         </div>
     </div>

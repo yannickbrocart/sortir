@@ -48,6 +48,10 @@ class Output
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'registred')]
     private $users;
 
+    #[ORM\ManyToOne(targetEntity: Campus::class, inversedBy: 'outputs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $campus;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -189,6 +193,18 @@ class Output
         if ($this->users->removeElement($user)) {
             $user->removeRegistred($this);
         }
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
 
         return $this;
     }

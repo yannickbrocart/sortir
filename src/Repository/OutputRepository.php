@@ -2,11 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\Filter;
 use App\Entity\Output;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @extends ServiceEntityRepository<Output>
@@ -46,6 +48,26 @@ class OutputRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+
+    public function findByFilter($filter): ?Output
+    {
+        $cqb = $this->createQueryBuilder('o');
+
+        if ($filter->getCampus()->getId()) {
+            $cqb->Where('o.campus = :campus')
+                ->setParameter('campus', $filter["campus"]);
+        };
+
+        if ($filter->getSearch()) {
+            $cqb->andWhere('o.name LIKE :search')
+                ->setParameter('search', $filter["search"]);
+        };
+
+        return $cqb
+            ->getQuery()
+            ->getResult();
+    }
+
 
     // /**
     //  * @return Output[] Returns an array of Output objects

@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}Sorties{% endblock %}
+
+{% block body %}
+    <div class="row pt-3 display-6 justify-content-center">Créer une sortie</div>
+    <div class="row pt-5 output-eni gx-5">
+        <div class="col-6">
+            {{ form_start(outputForm) }}
+            <div class="row mb-3">
+                <label for="inputName" class="form-label mb-2 px-0">Nom de la sortie : </label>
+                {{ form_widget(outputForm.name) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputDate" class="form-label mb-2 px-0">Date et heure de la sortie : </label>
+                {{ form_widget(outputForm.startdatetime, { 'label': 'Submit me' }) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputDeadline" class="form-label mb-2 px-0">Date limite d'inscription : </label>
+                {{ form_widget(outputForm.registrationdeadline) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputNumber" class="form-label mb-2 px-0">Nombre de places : </label>
+                {{ form_widget(outputForm.registrationmaxnumber) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputDuration" class="form-label mb-2 px-0">Durée : </label>
+                {{ form_widget(outputForm.duration) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputInfos" class="form-label mb-2 px-0">Description et infos : </label>
+                {{ form_widget(outputForm.outputinfos) }}
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row mb-3">
+                <label for="inputCampus" class="form-label mb-2 px-0">Campus : </label>
+                {{ form_widget(outputForm.place) }}
+            </div>
+            <div class="row mb-3">
+                <label for="inputPlace" class="form-label mb-2 px-0">Lieu : </label>
+                {#{{ form_widget(outputForm) }}#}
+            </div>
+            <div class="row mb-3">
+                <label for="inputPlace" class="form-label mb-2 px-0">Rue : </label>
+                {#{{ form_widget(outputForm) }}#}
+            </div>
+            <div class="row mb-3">
+                <label for="inputPlace" class="form-label mb-2 px-0">Code postal : </label>
+                {#{{ form_widget(outputForm) }}#}
+            </div>
+            <div class="row mb-3">
+                <label for="inputPlace" class="form-label mb-2 px-0">Latitude : </label>
+                {#{{ form_widget(outputForm) }}#}
+            </div>
+            <div class="row mb-3">
+                <label for="inputPlace" class="form-label mb-2 px-0">Longitude : </label>
+                {#{{ form_widget(outputForm) }}#}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col form-group p-0">
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+            <button class="btn btn-primary" type="submit">Publier</button>
+            <button class="btn btn-primary" type="submit">Supprimer la sortie</button>
+            <a href="{{ path('main_home') }}">
+                <button class="btn btn-primary " type="button">Annuler</button>
+            </a>
+        </div>
+    </div>
+
+
+
+    {{ form_end(outputForm) }}
+
+    </div>
+{% endblock %}

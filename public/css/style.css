@@ -72,3 +72,9 @@ img {
 #organizers a {
     color: dodgerblue;
 }
+
+.output-eni {
+    max-width: 800px;
+    margin: auto;
+    padding: 10px 20px;
+}
