@@ -96,6 +96,7 @@ class OutputRepository extends ServiceEntityRepository
                 ->setParameter('datenow', $dateNow);
         };
 
+        $cqb->addOrderBy('o.startdatetime', 'ASC');
 
         return $cqb
             ->getQuery()

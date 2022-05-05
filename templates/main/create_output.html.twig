@@ -3,7 +3,13 @@
 {% block title %}{{ parent() }}Sorties{% endblock %}
 
 {% block body %}
-    <div class="row pt-3 display-6 justify-content-center">Créer une sortie</div>
+    <div class="row pt-3 display-6 justify-content-center">
+        {% if output is defined %}
+            Modifier une sortie
+        {% else %}
+            Créer une sortie
+        {% endif %}
+    </div>
     {{ form_start(outputForm) }}
     <div class="row pt-5 output-eni gx-5">
         <div class="col-6">
@@ -13,7 +19,7 @@
             </div>
             <div class="row mb-3">
                 <label for="inputDate" class="form-label mb-2 px-0">Date et heure de la sortie : </label>
-                {{ form_widget(outputForm.startdatetime, { 'label': 'Submit me' }) }}
+                {{ form_widget(outputForm.startdatetime) }}
             </div>
             <div class="row mb-3">
                 <label for="inputDeadline" class="form-label mb-2 px-0">Date limite d'inscription : </label>
@@ -46,11 +52,10 @@
                 {{ form_widget(outputForm.place) }}
             </div>
             <div class="row mb-3">
-                <label for="inputPlace" class="form-label mb-2 px-0">Rue : </label>
-                {{ form_widget(outputForm) }}
+                <label for="inputPlace" class="form-label mb-2 px-0">Rue : {{ place.street }}</label>
             </div>
             <div class="row mb-3">
-                <label for="inputPlace" class="form-label mb-2 px-0">Code postal : </label>
+                <label for="inputPlace" class="form-label mb-2 px-0">Code postal :</label>
                 {#{{ form_widget(outputForm) }}#}
             </div>
             <div class="row mb-3">
@@ -65,9 +70,13 @@
     </div>
     <div class="row mb-3">
         <div class="col form-group p-0 text-center">
-            <button class="btn btn-primary" type="submit">Enregistrer</button>
-            <button class="btn btn-primary" type="button">Publier</button>
-            <button class="btn btn-primary" type="button">Supprimer la sortie</button>
+            <button class="btn btn-primary" type="submit" name="submit" value="recorded">Enregistrer</button>
+            <button class="btn btn-primary" type="submit" name="submit" value="published">Publier</button>
+            {% if output is defined %}
+                <a href="{{ path('main_delete_output', {'id' : output.id}) }}">
+                <button class="btn btn-primary" type="button">Supprimer la sortie</button>
+                </a>
+            {% endif %}
             <a href="{{ path('main_home') }}">
                 <button class="btn btn-primary" type="button">Annuler</button>
             </a>
