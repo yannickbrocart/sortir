@@ -23,7 +23,6 @@
                 <div class="row mb-3">
                     <label for="search" class="col form-label mb-2 px-0">Le nom de la sortie contient : </label>
                     {{ form_widget(filterForm.search) }}
-
                 </div>
                 <div class="row">
                     <div class="col px-0">
@@ -80,6 +79,8 @@
                 </thead>
                 <tbody>
                 {% for output in outputs %}
+                    {% if output.state.label == "Créée" and output.organizer.username != app.user.username %}
+                    {% else %}
                     <tr>
                         <th scope="row">{{ output.name }}</th>
                         <td>{{ output.startdatetime | date ("d/m/y - H:i") }}</td>
@@ -89,26 +90,33 @@
                         <td>{% if output.users.get(app.user.id) == app.user.username %} X
                             {% else %}
                             {% endif %}</td>
-                        <td id="organizers"><a href=""> {{ output.organizer.username }} </a></td>
+                        <td id="organizers">
+                            {% if output.organizer.username == app.user.username %}
+                                <a href="{{ path('main_user_edit') }}"> {{ output.organizer.username }} </a>
+                            {% else %}
+                                <a href="{{ path('main_user_view',{'id' : output.organizer.id}) }}"> {{ output.organizer.username }} </a>
+                            {% endif %}
+                        </td>
                         <td>{% if output.organizer.username == app.user.username %}                                 {# si créateur #}
                                 {% if output.state.label == "Créée" %}                                                  {# et si en création #}
-                                    <a href="">Modifier</a> | <a href="">Publier</a>
+                                    <a href="{{ path('main_create_output',{'id' : output.id}) }}">Modifier</a> | <a href="">Publier</a>
                                 {% elseif output.state.label == "Ouverte" or output.state.label == "Clôturée" %}        {# ou si publié #}
-                                    <a href="">Afficher</a> | <a href="">Annuler</a>
+                                    <a href="{{ path('main_output_view',{'id' : output.id}) }}">Afficher</a> | <a href="">Annuler</a>
                                 {% else %}                                                                              {# sinon #}
                                     <a href="">Afficher</a>
                                 {% endif %}
                             {% elseif output.users.get(app.user.id) == app.user.username %}                         {# si inscrit #}
-                                <a href="">Afficher</a>
+                                <a href="{{ path('main_output_view',{'id' : output.id}) }}">Afficher</a>
                                 {% if output.state.label == "Fermée" or output.state.label == "Ouverte" %}                {# et désistable #}
                                     | Se désister
                                 {% endif %}
                             {% else %}                                                                              {# si non inscrit ni créateur #}
-                                <a href="">Afficher</a>
+                                <a href="{{ path('main_output_view',{'id' : output.id}) }}">Afficher</a>
                                 {% if output.state.label == "Ouverte" %} | <a href="">S'inscrire</a>                {# si inscriptions ouvertes #}
                                 {% endif %}
                             {% endif %}</td>
                     </tr>
+                    {% endif %}
                 {% endfor  %}
                 </tbody>
             </table>

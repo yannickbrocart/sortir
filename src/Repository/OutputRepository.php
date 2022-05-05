@@ -4,11 +4,13 @@ namespace App\Repository;
 
 use App\Entity\Filter;
 use App\Entity\Output;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @extends ServiceEntityRepository<Output>
@@ -49,19 +51,51 @@ class OutputRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByFilter($filter): ?Output
+    public function findByFilter(Filter $filter, User $user): array
     {
         $cqb = $this->createQueryBuilder('o');
+        $dateNow = new \DateTime("now");
 
-        if ($filter->getCampus()->getId()) {
-            $cqb->Where('o.campus = :campus')
-                ->setParameter('campus', $filter["campus"]);
+        if ($filter->getCampus()) {
+            $cqb->andWhere('o.campus = :campus')
+                ->setParameter('campus', $filter->getCampus());
         };
 
         if ($filter->getSearch()) {
             $cqb->andWhere('o.name LIKE :search')
-                ->setParameter('search', $filter["search"]);
+                ->setParameter('search', '%'.$filter->getSearch().'%');
         };
+
+        if ($filter->getStartdatetime()) {
+            $cqb->andWhere('o.startdatetime >= :startdate')
+                ->setParameter('startdate', $filter->getStartdatetime());
+        };
+
+        if ($filter->getEnddatetime()) {
+            $cqb->andWhere('o.startdatetime <= :enddate')
+                ->setParameter('enddate', $filter->getEnddatetime());
+        };
+
+        if ($filter->getOrganize()) {
+            $cqb->andWhere('o.organizer = :organizer')
+                ->setParameter('organizer', $user);
+        };
+
+        if ($filter->getRegistered()) {
+                $cqb->andWhere(':registered member of o.users')
+                    ->setParameter('registered', $user);
+            };
+
+        if ($filter->getUnregistered()) {
+            $cqb->andWhere(':unregistered not member of o.users')
+                ->setParameter('unregistered', $user);
+        };
+
+        if ($filter->getPast()) {
+            $cqb->andWhere('o.startdatetime < :datenow')
+                ->setParameter('datenow', $dateNow);
+        };
+
 
         return $cqb
             ->getQuery()
