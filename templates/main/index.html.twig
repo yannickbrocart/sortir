@@ -103,7 +103,7 @@
                                 {% elseif output.state.label == "Ouverte" or output.state.label == "Clôturée" %}        {# ou si publié #}
                                     <a href="{{ path('main_output_view',{'id' : output.id}) }}">Afficher</a> | <a href="">Annuler</a>
                                 {% else %}                                                                              {# sinon #}
-                                    <a href="">Afficher</a>
+                                    <a href="{{ path('main_output_view',{'id' : output.id}) }}">Afficher</a>
                                 {% endif %}
                             {% elseif output.users.get(app.user.id) == app.user.username %}                         {# si inscrit #}
                                 <a href="{{ path('main_output_view',{'id' : output.id}) }}">Afficher</a>

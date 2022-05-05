@@ -5,6 +5,13 @@
 {% block body %}
     <div class="row pt-3 display-6 justify-content-center">Profil {{ user.username }}</div>
     <div class="row pt-5 user-eni">
+        <div class="col-5">
+            {% if(user.urlpicture) %}
+                <img alt="Photo utilisateur" title="Photo utilisateur" src="{{ asset('img/' ~ user.urlpicture) }}" width="200"/>
+            {% else %}
+                <img alt="Photo utilisateur" title="Photo utilisateur" src="{{ asset('img/blank.jpg') }}" width="200"/>
+            {% endif %}
+        </div>
         <div class="col-2 form-group p-0 mx-auto">
             <a href="{{ path('main_home') }}">
                 <button class="btn btn-primary" type="button">Retour</button>

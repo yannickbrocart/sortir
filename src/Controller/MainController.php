@@ -99,29 +99,4 @@ class MainController extends AbstractController
             'userForm' => $userForm->createView(),
         ]);
     }
-
-    #[Route('output', name: 'create_output')]
-    public function createOutput(Request $request, EntityManagerInterface $entityManager,
-                                 OutputRepository $outputRepository, OutputType $outputType,
-                                 CampusRepository $campusRepository): Response
-    {
-        $output = new Output();
-        $campus = $campusRepository->findAll();
-        $outputForm = $this->createForm(OutputType::class, $output);
-        $outputForm->handleRequest($request);
-        /*$state = new State();
-        $state->setLabel('Créée');
-        $output->setState($state);*/
-
-        if ($outputForm->isSubmitted() /*&& $outputForm->isValid()*/) {
-            /*$entityManager->persist($output);
-            $entityManager->flush();
-            return $this->redirectToRoute('main_home');
-        };*/
-            return $this->render('main/create_output.html.twig', [
-                'outputForm' => $outputForm->createView(),
-                'campus' => $campus,
-            ]);
-        }
-    }
 }
