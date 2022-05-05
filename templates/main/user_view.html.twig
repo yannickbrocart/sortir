@@ -3,19 +3,48 @@
 {% block title %}{{ parent() }}Profil organisateur¨{% endblock %}
 
 {% block body %}
-    <div class="row pt-3 display-6 justify-content-center">Profil {{ user.username }}</div>
+    <div class="row pt-3 display-6 justify-content-center">Profil de : {{ user.username }}</div>
     <div class="row pt-5 user-eni">
-        <div class="col-5">
+        <div class="col-2">
             {% if(user.urlpicture) %}
                 <img alt="Photo utilisateur" title="Photo utilisateur" src="{{ asset('img/' ~ user.urlpicture) }}" width="200"/>
             {% else %}
                 <img alt="Photo utilisateur" title="Photo utilisateur" src="{{ asset('img/blank.jpg') }}" width="200"/>
             {% endif %}
         </div>
+            <div class="col-4 row mb-3">
+                <div class="row mb-6 justify-content-end h7">
+                    Prénom :
+                    <label></label>
+                    Nom :
+                    <label></label>
+                    Téléphone :
+                    <label></label>
+                    Email :
+                    <label></label>
+                    Campus :
+                </div>
+            </div>
+            <div class="col-6 row mb-2">
+                <div class="row mb-6 justify-content-front h5">
+                    {{ user.lastname }}
+                    <label></label>
+                    {{ user.firstname }}
+                    <label></label>
+                    {{ user.phonenumber }}
+                    <label></label>
+                    {{ user.email }}
+                    <label></label>
+                    {{ user.campus.name }}
+                </div>
+            </div>
+
+            </div>
         <div class="col-2 form-group p-0 mx-auto">
             <a href="{{ path('main_home') }}">
                 <button class="btn btn-primary" type="button">Retour</button>
             </a>
         </div>
+
     </div>
 {% endblock %}
