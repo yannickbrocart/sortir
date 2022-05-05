@@ -34,7 +34,7 @@ class Output
     private $outputinfos;
 
     #[ORM\ManyToOne(targetEntity: State::class, inversedBy: 'outputs')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $state;
 
     #[ORM\ManyToOne(targetEntity: Place::class, inversedBy: 'outputs')]

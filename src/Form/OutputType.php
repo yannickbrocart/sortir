@@ -12,15 +12,12 @@ use Doctrine\DBAL\Types\DateTimeType;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Date;
 
 class OutputType extends AbstractType
 {
@@ -30,9 +27,13 @@ class OutputType extends AbstractType
             ->add('name')
             ->add('startdatetime', \Symfony\Component\Form\Extension\Core\Type\DateTimeType::class, [
                 'required' => true,
+                'widget' => 'single_text',
                 ])
             ->add('duration',)
-            ->add('registrationdeadline')
+            ->add('registrationdeadline', DateType::class, [
+                'required' => true,
+                'widget' => 'single_text',
+                ])
             ->add('registrationmaxnumber')
             ->add('outputinfos')
             ->add('city', EntityType::class, [
@@ -40,15 +41,10 @@ class OutputType extends AbstractType
                 'choice_label' => 'name',
                 'required' => true,
                 'mapped' => false])
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-                $city = $event->getData();
-                $form = $event->getForm();
-                if (!$city || null === $city->getId()) {
-                    $form->add('place', EntityType::class, [
+            ->add('place', EntityType::class, [
                         'class' => Place::class,
                         'choice_label' => 'name',
-                        'required' => true]);}
-            });
+                        'required' => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

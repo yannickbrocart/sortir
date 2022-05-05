@@ -24,7 +24,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 /**
  * @Route("/", name="main_")
  */
-
 class MainController extends AbstractController
 {
     #[Route('user_view/{id}', name: 'user_view')]
@@ -32,8 +31,8 @@ class MainController extends AbstractController
     {
         $user = $userRepository->find($id);
         return $this->render('main/user_view.html.twig', [
-        'user' => $user,
-            ]);
+            'user' => $user,
+        ]);
     }
 
     #[Route('output_view/{id}', name: 'output_view')]
@@ -46,36 +45,36 @@ class MainController extends AbstractController
     }
 
     #[Route('', name: 'home')]
-    public function index(Request $request, CampusRepository $campusRepository,
+    public function index(Request          $request, CampusRepository $campusRepository,
                           OutputRepository $outputRepository, Security $security): Response
     {
         $user = $security->getUser();
         $campus = $campusRepository->findAll();
         $filter = new Filter();
-        $filterForm = $this ->createForm(FilterType::class, $filter);
+        $filterForm = $this->createForm(FilterType::class, $filter);
         $filterForm->handleRequest($request);
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
             $output = $outputRepository->findByFilter($filter, $user);
         } else {
-            $output = $outputRepository->findAll();
+            $output = $outputRepository->findBy([],['startdatetime' => 'ASC']);
         }
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
             'campus' => $campus,
             'outputs' => $output,
             'filterForm' => $filterForm->createView(),
-            ]);
+        ]);
     }
 
     #[Route('user', name: 'user_edit')]
-    public function user(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher,
+    public function user(Request  $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher,
                          Security $security, SluggerInterface $slugger): Response
     {
-        $user=$security->getUser();
-        $userForm = $this ->createForm(UserType::class, $user);
+        $user = $security->getUser();
+        $userForm = $this->createForm(UserType::class, $user);
         $userForm->handleRequest($request);
         if ($userForm->isSubmitted() && $userForm->isValid()) {
-            if ($userForm->get('plainpassword')->getData()!='') {
+            if ($userForm->get('plainpassword')->getData() != '') {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -87,7 +86,7 @@ class MainController extends AbstractController
             if ($pictureFile) {
                 $originalFilename = pathinfo($pictureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$pictureFile->guessExtension();
+                $newFilename = $safeFilename . '.' . $pictureFile->guessExtension();
                 $pictureFile->move('img/', $newFilename);
                 $user->setUrlpicture($newFilename);
             }
