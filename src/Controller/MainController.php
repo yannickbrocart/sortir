@@ -11,9 +11,11 @@ use App\Form\OutputType;
 use App\Form\UserType;
 use App\Repository\CampusRepository;
 use App\Repository\OutputRepository;
+use App\Repository\StateRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -46,13 +48,40 @@ class MainController extends AbstractController
 
     #[Route('', name: 'home')]
     public function index(Request          $request, CampusRepository $campusRepository,
-                          OutputRepository $outputRepository, Security $security): Response
+                          OutputRepository $outputRepository, Security $security,
+                          StateRepository $stateRepository, EntityManagerInterface $entityManager): Response
     {
         $user = $security->getUser();
         $campus = $campusRepository->findAll();
         $filter = new Filter();
         $filterForm = $this->createForm(FilterType::class, $filter);
         $filterForm->handleRequest($request);
+
+        $outputs = $outputRepository->findAll();
+        $dateNow = new \DateTime("now");
+        foreach ($outputs as $output) {
+            if ($output->getRegistrationdeadline() < $dateNow && $output->getState()->getLabel() != 'Annulée')
+            {
+                $output->setState($stateRepository->find(3));
+                $entityManager->persist($output);
+                $entityManager->flush();
+            }
+            if ($output->getStartdatetime() < $dateNow && $output->getState()->getLabel() != 'Annulée')
+            {
+                $output->setState($stateRepository->find(5));
+                $entityManager->persist($output);
+                $entityManager->flush();
+            }
+            $startDate = clone $output->getStartdatetime();
+            if ($output->getStartdatetime() < $dateNow &&
+                $startDate->add( new \DateInterval( 'PT' . ( (integer) $output->getDuration() ) . 'M' ) ) > $dateNow)
+            {
+                $output->setState($stateRepository->find(4));
+                $entityManager->persist($output);
+                $entityManager->flush();
+            }
+        }
+
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
             $output = $outputRepository->findByFilter($filter, $user);
         } else {

@@ -116,7 +116,7 @@
                                     {% endif %}
                                 {% else %}                                                                              {# si non inscrit ni créateur #}
                                     <a href="{{ path('main_output_view',{'id' : output.id}) }}">Afficher</a>
-                                    {% if output.state.label == "Ouverte" %} | <a href="">S'inscrire</a>                {# si inscriptions ouvertes #}
+                                    {% if output.state.label == "Ouverte" %} | {#<a href="">#}S'inscrire{#</a>#}                {# si inscriptions ouvertes #}
                                     {% endif %}
                                 {% endif %}
                             {% endif %}</td>
